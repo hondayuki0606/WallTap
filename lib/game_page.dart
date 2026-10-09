@@ -6,6 +6,8 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wall_tap/scenery_page.dart';
+import 'package:wall_tap/shockwave_painter.dart';
+import 'hammer_painter.dart';
 import 'main.dart';
 
 class GamePage extends StatefulWidget {
@@ -15,9 +17,8 @@ class GamePage extends StatefulWidget {
   State<GamePage> createState() => _GamePageState();
 }
 
-class _GamePageState extends State<GamePage>
-    with SingleTickerProviderStateMixin {
-  static const int maxWallHits = 100;
+class _GamePageState extends State<GamePage> with TickerProviderStateMixin {
+  static const int maxWallHits = 1000000;
 
   int wallHits = 0;
 
@@ -26,6 +27,7 @@ class _GamePageState extends State<GamePage>
   bool showHitEffect = false;
   bool isBreaking = false;
   late AnimationController hammerController;
+  late AnimationController shockwaveController;
 
   Offset tapPosition = Offset.zero;
 
@@ -41,13 +43,27 @@ class _GamePageState extends State<GamePage>
       vsync: this,
       duration: const Duration(milliseconds: 180),
     );
-
+    // 衝撃波用のアニメーションコントローラー（200ミリ秒で広がる）
+    shockwaveController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 150),
+    )..addStatusListener((status) {
+        // アニメーションが完了したら確実に非表示にする
+        if (status == AnimationStatus.completed) {
+          if (mounted && !isBreaking) {
+            setState(() {
+              showHitEffect = false;
+            });
+          }
+        }
+      });
     loadHits();
   }
 
   @override
   void dispose() {
     hammerController.dispose();
+    shockwaveController.dispose(); // 破棄を追加
     super.dispose();
   }
 
@@ -62,6 +78,7 @@ class _GamePageState extends State<GamePage>
 
     setState(() {
       wallHits = prefs.getInt('wall_hits') ?? 0;
+      damage = wallHits / maxWallHits;
     });
   }
 
@@ -90,10 +107,11 @@ class _GamePageState extends State<GamePage>
     setState(() {
       tapPosition = details.localPosition;
       showHitEffect = true;
-
       wallHits++;
-
       damage = wallHits / maxWallHits;
+
+      // 衝撃波アニメーションを再生
+      shockwaveController.forward(from: 0.0);
 
       if (wallHits % 1000 == 0) {
         cracks.add(
@@ -185,15 +203,14 @@ class _GamePageState extends State<GamePage>
 
   String _format(int n) {
     return n.toString().replaceAllMapped(
-      RegExp(r'(\d)(?=(\d{3})+$)'),
+          RegExp(r'(\d)(?=(\d{3})+$)'),
           (match) => '${match.group(1)},',
-    );
+        );
   }
 
   @override
   Widget build(BuildContext context) {
     final double progress = wallHits / maxWallHits;
-    final int remaining = maxWallHits - wallHits;
     Color counterColor;
     if (progress < 0.5) {
       counterColor = Colors.white;
@@ -222,7 +239,7 @@ class _GamePageState extends State<GamePage>
                     final value = hammerController.value;
 
                     return Transform.scale(
-                      scale: 1.0 - value * 0.18,
+                      scale: 1.0 - (value * 0.18),
                       child: Transform.translate(
                         offset: Offset(
                           sin(value * 30) * 8,
@@ -290,38 +307,48 @@ class _GamePageState extends State<GamePage>
             // タップエフェクト
             // ==========================================
             if (showHitEffect)
+              // 1. 衝撃波エフェクト（タップ位置を中心に描画）
               Positioned(
-                left: tapPosition.dx - 45,
-                top: tapPosition.dy - 90,
+                left: tapPosition.dx - 120 - 35, // 左へずらす
+                top: tapPosition.dy - 120 - 40, // 上へずらす
                 child: IgnorePointer(
                   child: AnimatedBuilder(
-                    animation: hammerController,
+                    animation: shockwaveController,
                     builder: (context, child) {
-                      final value = hammerController.value;
-
-                      // 最初は上、最後に振り下ろす
-                      final angle = -0.8 + (value * 1.6);
-
-                      return Transform.rotate(
-                        angle: angle,
-                        alignment: Alignment.bottomRight,
-                        child: const Icon(
-                          Icons.hardware,
-                          size: 90,
-                          color: Colors.yellow,
-                          shadows: [
-                            Shadow(
-                              color: Colors.black54,
-                              blurRadius: 8,
-                              offset: Offset(4, 5),
-                            ),
-                          ],
+                      return CustomPaint(
+                        size: const Size(240, 240),
+                        painter: SparkShockwavePainter(
+                          progress: shockwaveController.value,
                         ),
                       );
                     },
                   ),
                 ),
               ),
+            // 2. ハンマーの描画（既存のコード）
+            Positioned(
+              left: tapPosition.dx - 60, // ハンマーのサイズに合わせて位置を調整
+              top: tapPosition.dy - 100,
+              child: IgnorePointer(
+                child: AnimatedBuilder(
+                  animation: shockwaveController,
+                  builder: (context, child) {
+                    final val = shockwaveController.value;
+                    // タップした瞬間にぐっと振り下ろす回転
+                    final angle = -0.8 + (val * 1.4);
+
+                    return Transform.rotate(
+                      angle: angle,
+                      alignment: const Alignment(0.4, 0.8), // 柄の下元付近を軸に回転
+                      child: CustomPaint(
+                        size: const Size(100, 100), // ハンマーの大きさ
+                        painter: HammerPainter(),
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ),
 
             // ==========================================
             // 下部の説明

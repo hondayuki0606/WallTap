@@ -26,7 +26,7 @@ class StartPage extends StatelessWidget {
                 ),
                 const SizedBox(height: 24),
                 const Text(
-                  'Smash the Wall!',
+                  'Smash The Wall!',
                   style: TextStyle(
                     fontSize: 42,
                     fontWeight: FontWeight.bold,
