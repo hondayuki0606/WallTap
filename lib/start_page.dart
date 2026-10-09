@@ -1,5 +1,5 @@
 // ============================================================
-// スタート画面
+// Start screen
 // ============================================================
 
 import 'package:flutter/material.dart';
@@ -26,7 +26,7 @@ class StartPage extends StatelessWidget {
                 ),
                 const SizedBox(height: 24),
                 const Text(
-                  '壁を叩け！',
+                  'Smash the Wall!',
                   style: TextStyle(
                     fontSize: 42,
                     fontWeight: FontWeight.bold,
@@ -34,7 +34,8 @@ class StartPage extends StatelessWidget {
                 ),
                 const SizedBox(height: 12),
                 const Text(
-                  '100万回叩いて壁を壊そう！',
+                  'Hit it 1,000,000 times to break the wall!',
+                  textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 18,
                     color: Colors.grey,
@@ -54,7 +55,7 @@ class StartPage extends StatelessWidget {
                       );
                     },
                     child: const Text(
-                      'ゲームスタート',
+                      'Start Game',
                       style: TextStyle(
                         fontSize: 22,
                         fontWeight: FontWeight.bold,
@@ -62,28 +63,28 @@ class StartPage extends StatelessWidget {
                     ),
                   ),
                 ),
-                const SizedBox(height: 50),
-                SizedBox(
-                  width: double.infinity,
-                  height: 60,
-                  child: FilledButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (_) => const GamePage(),
-                        ),
-                      );
-                    },
-                    child: const Text(
-                      'Ad',
-                      style: TextStyle(
-                        fontSize: 22,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ),
+                // const SizedBox(height: 50),
+                // SizedBox(
+                //   width: double.infinity,
+                //   height: 60,
+                //   child: FilledButton(
+                //     onPressed: () {
+                //       Navigator.push(
+                //         context,
+                //         MaterialPageRoute(
+                //           builder: (_) => const GamePage(),
+                //         ),
+                //       );
+                //     },
+                //     child: const Text(
+                //       'Watch Ad',
+                //       style: TextStyle(
+                //         fontSize: 22,
+                //         fontWeight: FontWeight.bold,
+                //       ),
+                //     ),
+                //   ),
+                // ),
               ],
             ),
           ),

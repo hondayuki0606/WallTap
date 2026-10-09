@@ -183,6 +183,13 @@ class _GamePageState extends State<GamePage>
         )} / $maxWallHits';
   }
 
+  String _format(int n) {
+    return n.toString().replaceAllMapped(
+      RegExp(r'(\d)(?=(\d{3})+$)'),
+          (match) => '${match.group(1)},',
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final double progress = wallHits / maxWallHits;
@@ -269,7 +276,7 @@ class _GamePageState extends State<GamePage>
                     ],
                   ),
                   child: Text(
-                    '${wallHits.toString()} / ${maxWallHits.toString()} 回',
+                    '${_format(wallHits)} / ${_format(maxWallHits)} hits',
                     style: TextStyle(
                       color: counterColor,
                       fontSize: progress > 0.95 ? 26 : 22,
@@ -327,7 +334,7 @@ class _GamePageState extends State<GamePage>
               child: IgnorePointer(
                 child: Center(
                   child: Text(
-                    '画面をタップして壁を叩こう！',
+                    'Tap the screen to smash the wall!',
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 18,
@@ -348,162 +355,4 @@ class _GamePageState extends State<GamePage>
       ),
     );
   }
-// @override
-// Widget build(BuildContext context) {
-//   // final progress = wallHits / maxWallHits;
-//
-//   return Scaffold(
-//     backgroundColor: const Color(0xFFEAEAEA),
-//     appBar: AppBar(
-//       title: const Text('壁を叩け！'),
-//       centerTitle: true,
-//     ),
-//     body: SafeArea(
-//       child: Column(
-//         children: [
-//           // --------------------------------------------------
-//           // 回数
-//           // --------------------------------------------------
-//
-//           Padding(
-//             padding: const EdgeInsets.all(16),
-//             child: Column(
-//               children: [
-//                 Row(
-//                   mainAxisAlignment:
-//                   MainAxisAlignment.spaceBetween,
-//                   children: [
-//                     Column(
-//                       crossAxisAlignment:
-//                       CrossAxisAlignment.start,
-//                       children: [
-//                         const Text(
-//                           'この壁',
-//                           style: TextStyle(
-//                             color: Colors.grey,
-//                           ),
-//                         ),
-//                         Text(
-//                           progressText,
-//                           style: const TextStyle(
-//                             fontSize: 24,
-//                             fontWeight: FontWeight.bold,
-//                           ),
-//                         ),
-//                       ],
-//                     ),
-//                     // Column(
-//                     //   crossAxisAlignment:
-//                     //   CrossAxisAlignment.end,
-//                     //   children: [
-//                     //     const Text(
-//                     //       '累計',
-//                     //       style: TextStyle(
-//                     //         color: Colors.grey,
-//                     //       ),
-//                     //     ),
-//                     //     Text(
-//                     //       '$totalHits 回',
-//                     //       style: const TextStyle(
-//                     //         fontSize: 24,
-//                     //         fontWeight: FontWeight.bold,
-//                     //       ),
-//                     //     ),
-//                     //   ],
-//                     // ),
-//                   ],
-//                 ),
-//
-//                 const SizedBox(height: 12),
-//
-//                 // // 進行バー
-//                 // ClipRRect(
-//                 //   borderRadius:
-//                 //   BorderRadius.circular(10),
-//                 //   child: LinearProgressIndicator(
-//                 //     value: progress,
-//                 //     minHeight: 14,
-//                 //     backgroundColor:
-//                 //     Colors.grey.shade300,
-//                 //     color: progress > 0.8
-//                 //         ? Colors.red
-//                 //         : Colors.orange,
-//                 //   ),
-//                 // ),
-//               ],
-//             ),
-//           ),
-//
-//           // --------------------------------------------------
-//           // 壁
-//           // --------------------------------------------------
-//
-//           Expanded(
-//             child: Center(
-//               child: GestureDetector(
-//                 behavior: HitTestBehavior.opaque,
-//                 onTap: hitWall,
-//                 child: AnimatedBuilder(
-//                   animation: crumbleController,
-//                   builder: (context, child) {
-//                     final value =
-//                         crumbleController.value;
-//
-//                     return Transform.scale(
-//                       scale: 1.0 - value * 0.18,
-//                       child: Transform.translate(
-//                         offset: Offset(
-//                           sin(value * 30) * 8,
-//                           value * 40,
-//                         ),
-//                         child: Opacity(
-//                           opacity: 1.0 - value,
-//                           child: Stack(
-//                             alignment: Alignment.center,
-//                             children: [
-//                               CustomPaint(
-//                                 size: const Size(
-//                                   300,
-//                                   430,
-//                                 ),
-//                                 painter: WallPainter(
-//                                   damage: damage,
-//                                   cracks: cracks,
-//                                 ),
-//                               ),
-//
-//                               if (showHitEffect)
-//                                 const Icon(
-//                                   Icons.flash_on,
-//                                   color: Colors.yellow,
-//                                   size: 90,
-//                                 ),
-//                             ],
-//                           ),
-//                         ),
-//                       ),
-//                     );
-//                   },
-//                 ),
-//               ),
-//             ),
-//           ),
-//
-//           // const Padding(
-//           //   padding: EdgeInsets.only(
-//           //     bottom: 30,
-//           //   ),
-//           //   child: Text(
-//           //     '壁をタップして叩こう！',
-//           //     style: TextStyle(
-//           //       fontSize: 20,
-//           //       fontWeight: FontWeight.bold,
-//           //     ),
-//           //   ),
-//           // ),
-//         ],
-//       ),
-//     ),
-//   );
-// }
 }

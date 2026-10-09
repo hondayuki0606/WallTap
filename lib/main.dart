@@ -11,7 +11,7 @@ class WallKnockApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: '壁を叩くゲーム',
+      title: 'Smash the Wall',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(

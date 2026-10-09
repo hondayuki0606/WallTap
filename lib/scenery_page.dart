@@ -1,5 +1,5 @@
 // ============================================================
-// 壁を壊した後の景色
+// Scenery after the wall breaks
 // ============================================================
 
 import 'package:flutter/material.dart';
@@ -49,7 +49,7 @@ class _SceneryPageState
       body: SafeArea(
         child: Stack(
           children: [
-            // 景色
+            // Scenery
             Positioned.fill(
               child: AnimatedBuilder(
                 animation: animationController,
@@ -64,7 +64,7 @@ class _SceneryPageState
               ),
             ),
 
-            // メッセージ
+            // Message
             Positioned(
               left: 0,
               right: 0,
@@ -72,7 +72,8 @@ class _SceneryPageState
               child: Column(
                 children: [
                   const Text(
-                    '壁が壊れた！',
+                    'Wall Smashed!',
+                    textAlign: TextAlign.center,
                     style: TextStyle(
                       fontSize: 38,
                       fontWeight: FontWeight.bold,
@@ -89,7 +90,7 @@ class _SceneryPageState
               ),
             ),
 
-            // もう一度
+            // Play again
             Positioned(
               left: 30,
               right: 30,
@@ -112,7 +113,7 @@ class _SceneryPageState
                     );
                   },
                   child: const Text(
-                    'もう一度壁を壊す',
+                    'Smash Another Wall',
                     style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
