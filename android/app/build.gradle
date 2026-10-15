@@ -10,7 +10,7 @@ if (keystorePropertiesFile.exists()) {
 }
 android {
     namespace = "com.naoyukihonda.wall_tap"
-    compileSdk = flutter.compileSdkVersion
+    compileSdk = 36
     ndkVersion = flutter.ndkVersion
 
     compileOptions {
@@ -24,8 +24,8 @@ android {
 
     defaultConfig {
         applicationId = "com.naoyukihonda.wall_tap"
-        minSdk = flutter.minSdkVersion
-        targetSdk = flutter.targetSdkVersion
+        minSdk = 24
+        targetSdk = 36
         versionCode = flutter.versionCode
         versionName = flutter.versionName
     }
